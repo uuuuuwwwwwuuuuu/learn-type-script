@@ -1,12 +1,2 @@
-function getFullName(user: {firstName: string, surName: string}): string {
-    return `${user.firstName} ${user.surName}`;
-}
+const arr: [number, string, ...boolean[]] = [1, 'Dev', true, false, true, true];
 
-const user = {
-    firstName: 'Denis',
-    surName: 'Voronin',
-    city: 'Minsk',
-    age: 18
-};
-
-console.log(getFullName(user));
