@@ -1,5 +1,5 @@
-const revenue: number = 1000;
-const bonus: number = 500;
+function getFullName(firstName: string, surName: string): string {
+    return `${firstName} ${surName}`;
+}
 
-const res: number = revenue + bonus;
-console.log(res)
+console.log(getFullName('Denis', 'Voronin'));
