@@ -1,5 +1,12 @@
-function getFullName(firstName: string, surName: string): string {
-    return `${firstName} ${surName}`;
+function getFullName(user: {firstName: string, surName: string}): string {
+    return `${user.firstName} ${user.surName}`;
 }
 
-console.log(getFullName('Denis', 'Voronin'));
+const user = {
+    firstName: 'Denis',
+    surName: 'Voronin',
+    city: 'Minsk',
+    age: 18
+};
+
+console.log(getFullName(user));
