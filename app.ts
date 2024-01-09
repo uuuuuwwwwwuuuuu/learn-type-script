@@ -1,3 +1,21 @@
-const arr: [number, string, ...boolean[]] = [1, 'Dev', true, false, true, true];
+enum StatusCode {
+    SUCCESS = 1,
+    IN_PROCESS,
+    FAILED
+}
 
-console.log(arr[4]);
+const res = {
+    message: 'Оплачено',
+    statusCode: StatusCode.SUCCESS
+};
+
+function action(status: StatusCode) {
+    console.log(status);
+}
+
+const enum Roles {
+    USER,
+    CHARACTER
+}
+
+const res2 = Roles.USER;
