@@ -1,21 +1,20 @@
-enum StatusCode {
-    SUCCESS = 1,
-    IN_PROCESS,
-    FAILED
+enum Status {
+    PUBLISHED = 'published',
+    DRAFT = 'draft',
+    DELETED = 'deleted'
 }
 
-const res = {
-    message: 'Оплачено',
-    statusCode: StatusCode.SUCCESS
-};
-
-function action(status: StatusCode) {
-    console.log(status);
+async function getFaqs(req: {topicId: number, status?: Status}): Promise<{
+    question: string,
+    answer: string,
+    tags: string[],
+    likes: number,
+    status: Status
+}[]> {
+	const res = await fetch('/faqs', {
+		method: 'POST',
+		body: JSON.stringify(req)
+	});
+	const data = await res.json();
+	return data;
 }
-
-const enum Roles {
-    USER,
-    CHARACTER
-}
-
-const res2 = Roles.USER;
