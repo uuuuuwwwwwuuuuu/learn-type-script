@@ -1,20 +1,33 @@
-enum Status {
-    PUBLISHED = 'published',
-    DRAFT = 'draft',
-    DELETED = 'deleted'
+function logId(id: string | number | boolean) {
+    switch (typeof id) {
+        case 'number':
+            console.log(id + 1);
+            break;
+        case 'boolean':
+            console.log(!id);
+            break;
+        case 'string':
+            console.log(id.toLowerCase());
+            break;
+    }
 }
 
-async function getFaqs(req: {topicId: number, status?: Status}): Promise<{
-    question: string,
-    answer: string,
-    tags: string[],
-    likes: number,
-    status: Status
-}[]> {
-	const res = await fetch('/faqs', {
-		method: 'POST',
-		body: JSON.stringify(req)
-	});
-	const data = await res.json();
-	return data;
+logId(1);
+logId('FkovDoVoF');
+logId(true);
+
+function logError(err: string | string[]) {
+    if (Array.isArray(err)) {
+        console.log(err);
+    } else {
+        console.log(err.toUpperCase());
+    }
+}
+
+function logObj(obj: {a: number} | {b: number}) {
+    if ('a' in obj) {
+        console.log(obj.a);
+    } else {
+        console.log(obj.b);
+    }
 }

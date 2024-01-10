@@ -1,15 +1,17 @@
 "use strict";
-var StatusCode;
-(function (StatusCode) {
-    StatusCode[StatusCode["SUCCESS"] = 1] = "SUCCESS";
-    StatusCode[StatusCode["IN_PROCESS"] = 2] = "IN_PROCESS";
-    StatusCode[StatusCode["FAILED"] = 3] = "FAILED";
-})(StatusCode || (StatusCode = {}));
-const res = {
-    message: 'Оплачено',
-    statusCode: StatusCode.SUCCESS
-};
-function action(status) {
-    console.log(status);
+function logId(id) {
+    switch (typeof id) {
+        case 'number':
+            console.log(id + 1);
+            break;
+        case 'boolean':
+            console.log(!id);
+            break;
+        case 'string':
+            console.log(id.toLowerCase());
+            break;
+    }
 }
-const res2 = 0 /* Roles.USER */;
+logId(1);
+logId('FkovDoVoF');
+logId(true);
