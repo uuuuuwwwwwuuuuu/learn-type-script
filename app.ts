@@ -1,17 +1,24 @@
-// type httpMethod = 'post' | 'get'; alias
+interface User {
+    name: string, 
+    age: number, 
+    skills: string[],
+    log: (id: number) => string
+}
 
-// function fetchWithAuth (url: string, method: httpMethod) {
-
-// }
-
-type User = {name: string, age: number, skills: string[]}
-type Role = {id: number};
-type UserWithRole = User & Role;
-
+interface UserWithRole extends User {
+    roleId: number
+}
 
 let user: UserWithRole  = {
     name: "Denis",
     age: 18,
     skills: ['1', '2'],
-    id: 2
+    roleId: 10,
+    log(id) {
+        return '';
+    }
+}
+
+interface UserDic {
+    [index: number]: User
 }
