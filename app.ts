@@ -1,18 +1,17 @@
-// enum RequestType {
-//     GET = 'GET',
-//     POST = 'POST'
+// type httpMethod = 'post' | 'get'; alias
+
+// function fetchWithAuth (url: string, method: httpMethod) {
+
 // }
 
-// function fetchWithAuth(url: string, method: RequestType) {
-//     ...
-// }
+type User = {name: string, age: number, skills: string[]}
+type Role = {id: number};
+type UserWithRole = User & Role;
 
-function fetchWithAuth(url: string, method: 'post' | 'get') {
 
+let user: UserWithRole  = {
+    name: "Denis",
+    age: 18,
+    skills: ['1', '2'],
+    id: 2
 }
-
-fetchWithAuth('http//:google.com', 'get');
-
-let method = 'post';
-
-fetchWithAuth('http//:google.com', method as 'post');
