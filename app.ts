@@ -1,33 +1,29 @@
-interface User {
-    login: string,
-    password?: string           //опционально (может быть, а может и не быть)
+interface IPayment {
+    sum: number,
+    from: number,
+    to: number
 }
 
-const user: User = {
-    login: 'hih@gmai.com',
+enum PayStatus {
+    SUCCESS = 'success',
+    FAILED = 'failed'
 }
 
-// function multiply(first: number, second?: number): number {     //опциональное значение аргумента функции
-//     return !second ? first * first : first * second; 
-// }
-
-function multiply(first: number, second: number = 5): number {     //дефолтное значение аргумента функции
-    return !second ? first * first : first * second; 
+interface IDataSuccess extends IPayment {
+    databaseId: number,
 }
 
-multiply(5);
-
-interface UserPro {
-    login: string,
-    password?: {
-        type: 'primary' | 'secondary'
-    };
+interface IDataFailed {
+    errorMessage: string,
+    errorCode: number
 }
 
-function testPass(user: UserPro) {
-    const type = user.password?.type            //Если этот параметр, вернётся этот параметр, или undefined
+interface ResponseSuccess {
+    payStatus: PayStatus.SUCCESS,
+    data: IDataSuccess
 }
 
-function test(param?: string) {
-    const res = param ?? multiply(5, 2);        //param ? param : multiply(5, 2);
+interface ResponseFailed {
+    payStatus: PayStatus.FAILED,
+    data: ResponseSuccess
 }
