@@ -1,29 +1,40 @@
-function logId(id: string | number): void {     //ничего не возвращает
-    console.log(id);
-}
+let input: unknown;
 
-function multiplt(first: number, second?: number): number | void {
-    if (!second) {
-        return first ** 2;
+input = 3;
+input = ['fcwe', 'vwwd'];
+
+// let res: string = input;        //ошибка
+
+function run(i: unknown) {         //приведение типа
+    switch (typeof i) {
+        case "number":
+            i++;
+            break;
+        default:
+            i
+            break;
     }
 }
 
-type voidFunc = () => void;
+run(input);
 
-const f1: voidFunc = () => {
+// async function getData() {
+//     try {
+//         await fetch('')
+//     } catch(error) {
+//         const e = error as Error;
+//     }
+// }
 
+async function getData() {
+    try {
+        await fetch('')
+    } catch(error) {
+        if (error instanceof Error) {
+            console.log(error)                  //Лучше так
+        }
+    }
 }
 
-const f2: voidFunc = () => {
-    return true; 
-}
-
-const b = f2() //вурнёт void не смотря на return true
-
-const skills = ['Dev', 'DevOps']
-
-const user: {s: string[]} = {
-    s: []
-}
-
-skills.forEach((skill) => user.s.push(skill)); 
+type union = unknown | string;     //unknown
+type intersection = unknown & string;     //string
