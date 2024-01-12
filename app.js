@@ -1,13 +1,11 @@
 "use strict";
-// enum RequestType {
-//     GET = 'GET',
-//     POST = 'POST'
+const user = {
+    login: 'hih@gmai.com',
+};
+// function multuply(first: number, second?: number): number {     //опциональное значение аргумента функции
+//     return !second ? first * first : first * second; 
 // }
-// function fetchWithAuth(url: string, method: RequestType) {
-//     ...
-// }
-function fetchWithAuth(url, method) {
+function multuply(first, second = 5) {
+    return !second ? first * first : first * second;
 }
-fetchWithAuth('http//:google.com', 'get');
-let method = 'post';
-fetchWithAuth('http//:google.com', method);
+console.log(multuply(5));

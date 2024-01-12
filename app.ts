@@ -1,24 +1,33 @@
 interface User {
-    name: string, 
-    age: number, 
-    skills: string[],
-    log: (id: number) => string
+    login: string,
+    password?: string           //опционально (может быть, а может и не быть)
 }
 
-interface UserWithRole extends User {
-    roleId: number
+const user: User = {
+    login: 'hih@gmai.com',
 }
 
-let user: UserWithRole  = {
-    name: "Denis",
-    age: 18,
-    skills: ['1', '2'],
-    roleId: 10,
-    log(id) {
-        return '';
-    }
+// function multiply(first: number, second?: number): number {     //опциональное значение аргумента функции
+//     return !second ? first * first : first * second; 
+// }
+
+function multiply(first: number, second: number = 5): number {     //дефолтное значение аргумента функции
+    return !second ? first * first : first * second; 
 }
 
-interface UserDic {
-    [index: number]: User
+multiply(5);
+
+interface UserPro {
+    login: string,
+    password?: {
+        type: 'primary' | 'secondary'
+    };
+}
+
+function testPass(user: UserPro) {
+    const type = user.password?.type            //Если этот параметр, вернётся этот параметр, или undefined
+}
+
+function test(param?: string) {
+    const res = param ?? multiply(5, 2);        //param ? param : multiply(5, 2);
 }
