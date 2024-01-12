@@ -1,40 +1,36 @@
-let input: unknown;
-
-input = 3;
-input = ['fcwe', 'vwwd'];
-
-// let res: string = input;        //ошибка
-
-function run(i: unknown) {         //приведение типа
-    switch (typeof i) {
-        case "number":
-            i++;
-            break;
-        default:
-            i
-            break;
-    }
+function generateError(message: string): never {
+    throw new Error(message);
 }
 
-run(input);
-
-// async function getData() {
-//     try {
-//         await fetch('')
-//     } catch(error) {
-//         const e = error as Error;
-//     }
+// function dumbError(): never {               //ничего не может вернуть
+//     return '';
 // }
 
-async function getData() {
-    try {
-        await fetch('')
-    } catch(error) {
-        if (error instanceof Error) {
-            console.log(error)                  //Лучше так
-        }
+type paymentAction = 'refund' | 'checkout' | 'reject';
+
+function processAction(action: paymentAction) {
+    switch (action) {
+        case 'refund':
+            //...
+            break;
+        case 'checkout':
+            //...
+            break;
+        // case 'reject':
+        //     //...
+        //     break;
+        default:
+            const _: never = action;                //будет ругаться на присудствие reject
+            throw new Error('Нет такого action');
     }
 }
 
-type union = unknown | string;     //unknown
-type intersection = unknown & string;     //string
+
+function isString(x: string | number): boolean {
+    if (typeof x === 'string') {
+        return true;
+    } else if (typeof x === 'number') {
+        return false;
+    }
+    generateError('vwsvsd');
+}
