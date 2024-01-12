@@ -1,29 +1,29 @@
-interface IPayment {
-    sum: number,
-    from: number,
-    to: number
+function logId(id: string | number): void {     //ничего не возвращает
+    console.log(id);
 }
 
-enum PayStatus {
-    SUCCESS = 'success',
-    FAILED = 'failed'
+function multiplt(first: number, second?: number): number | void {
+    if (!second) {
+        return first ** 2;
+    }
 }
 
-interface IDataSuccess extends IPayment {
-    databaseId: number,
+type voidFunc = () => void;
+
+const f1: voidFunc = () => {
+
 }
 
-interface IDataFailed {
-    errorMessage: string,
-    errorCode: number
+const f2: voidFunc = () => {
+    return true; 
 }
 
-interface ResponseSuccess {
-    payStatus: PayStatus.SUCCESS,
-    data: IDataSuccess
+const b = f2() //вурнёт void не смотря на return true
+
+const skills = ['Dev', 'DevOps']
+
+const user: {s: string[]} = {
+    s: []
 }
 
-interface ResponseFailed {
-    payStatus: PayStatus.FAILED,
-    data: ResponseSuccess
-}
+skills.forEach((skill) => user.s.push(skill)); 
