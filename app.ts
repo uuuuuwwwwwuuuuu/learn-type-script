@@ -1,16 +1,26 @@
-class User {
-    _login: string;
-    password: string;
+interface ILogger {
+    log(...args: any): void;
+    error(...args: any):  void;
+}
 
-    set login(login: string) {
-        this._login = 'user-' + login
+class Logger implements ILogger {
+    log(...args: any[]): void {
+        console.log(...args);
     }
-
-    get login() {
-        return this._login;
+    error(...args: any[]): void {
+        console.log(...args)
     }
 }
 
-const user = new User()
-user.login = 'myLogin';
-console.log(user);
+interface IPayment {
+    pay(paymentId: number): void;
+    price?: number;
+}
+
+class User implements IPayment {
+    pay(paymentId: number): void {
+        //code
+    }
+    price?: number | undefined;
+
+}
