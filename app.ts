@@ -1,26 +1,36 @@
-interface ILogger {
-    log(...args: any): void;
-    error(...args: any):  void;
-}
+type PaymentStatus = 'new' | 'paid';
 
-class Logger implements ILogger {
-    log(...args: any[]): void {
-        console.log(...args);
+class Payment {
+    id: number;
+    status: PaymentStatus = 'new';
+
+    constructor(id: number) {
+        this.id = id;
     }
-    error(...args: any[]): void {
-        console.log(...args)
+
+    pay() {
+        this.status = 'paid';
     }
 }
 
-interface IPayment {
-    pay(paymentId: number): void;
-    price?: number;
-}
+class ParsistedPayment extends Payment {
+    dataBaseId: number;
+    paidAt: Date;
 
-class User implements IPayment {
-    pay(paymentId: number): void {
-        //code
+    constructor() {
+        const id = Math.random();
+        super(id);
     }
-    price?: number | undefined;
 
+    save() {
+        // Сохраняет базу
+    }
+
+    override pay(date?: Date) {          //override
+        if (date) {
+            this.paidAt = date;
+        }
+    }
 }
+
+new ParsistedPayment()
