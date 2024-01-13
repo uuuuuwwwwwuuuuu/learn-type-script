@@ -1,36 +1,34 @@
-function generateError(message: string): never {
-    throw new Error(message);
+// let a: number = 5;
+// let b: string = a.toString();
+
+// let c = 'verver';
+// let d: number = parseInt(c);
+
+interface User {
+    name: string;
+    email: string;
+    login: string;
 }
 
-// function dumbError(): never {               //ничего не может вернуть
-//     return '';
+const user: User = {
+    name: "Вася",
+    email: 'bever@gmail.com',
+    login: 'vavasilii'
+}
+
+interface Admin {
+    name: string;
+    role: number
+}
+
+// const admin: Admin = {          //так себе
+//     ...user,
+//     role: 1
 // }
 
-type paymentAction = 'refund' | 'checkout' | 'reject';
-
-function processAction(action: paymentAction) {
-    switch (action) {
-        case 'refund':
-            //...
-            break;
-        case 'checkout':
-            //...
-            break;
-        // case 'reject':
-        //     //...
-        //     break;
-        default:
-            const _: never = action;                //будет ругаться на присудствие reject
-            throw new Error('Нет такого action');
+function userToAdmin(user: User): Admin {           //норм
+    return {
+        name: user.name,
+        role: 1
     }
-}
-
-
-function isString(x: string | number): boolean {
-    if (typeof x === 'string') {
-        return true;
-    } else if (typeof x === 'number') {
-        return false;
-    }
-    generateError('vwsvsd');
 }
