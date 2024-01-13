@@ -1,34 +1,44 @@
-// let a: number = 5;
-// let b: string = a.toString();
-
-// let c = 'verver';
-// let d: number = parseInt(c);
-
 interface User {
     name: string;
     email: string;
     login: string;
 }
 
-const user: User = {
-    name: "Вася",
-    email: 'bever@gmail.com',
-    login: 'vavasilii'
-}
-
 interface Admin {
     name: string;
-    role: number
+    role: number;
 }
 
-// const admin: Admin = {          //так себе
-//     ...user,
-//     role: 1
+const user: User = {
+    name: "Вася",
+    email: "Vasiliy@gmail.com",
+    login: 'vasia'
+}
+
+function logId(id: string | number) {
+    if (isString(id)) {
+        console.log(id);
+    } else {
+        console.log(id);
+    }
+}
+
+function isString(x: string | number): x is string {            //это bool
+    return typeof x === 'string';
+}
+
+function isAdmin(user: User | Admin): user is Admin {
+    return 'role' in user;
+}
+
+// function isAdmin(user: User | Admin): user is Admin {
+//     return (user as Admin).role !== undefined;
 // }
 
-function userToAdmin(user: User): Admin {           //норм
-    return {
-        name: user.name,
-        role: 1
+function setRoleZero(user: User | Admin) {
+    if (isAdmin(user)) {
+        user.role = 0;
+    } else {
+        throw new Error('Пользовательно не админ');
     }
 }
