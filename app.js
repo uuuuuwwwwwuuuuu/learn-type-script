@@ -1,38 +1,28 @@
 "use strict";
-class Payment {
-    constructor(id) {
-        this.status = 'new';
-        this.id = id;
-    }
-    pay() {
-        this.status = 'paid';
-    }
-}
-class ParsistedPayment extends Payment {
-    constructor() {
-        const id = Math.random();
-        super(id);
-    }
-    save() {
-        // Сохраняет базу
-    }
-    pay(date) {
-        if (date) {
-            this.paidAt = date;
-        }
-    }
-}
-new ParsistedPayment();
 class User {
-    constructor() {
-        this.name = 'user';
-        console.log(this.name);
+    constructor(name) {
+        this.name = name;
     }
 }
-class Admin extends User {
+// class Users extends Array<User> {        //Так себе вариант
+//     searchByName(name: string) {
+//         return this.filter(u => u.name === name);
+//     }
+// }
+// const users = new Users();
+class UserList {
     constructor() {
-        super(...arguments);
-        this.name = 'admin';
+        this.users = [];
+    }
+    push(user) {
+        this.users.push(user);
+    }
+    getUsersToString() {
+        return this.users.map((user) => user.name).join(', ');
     }
 }
-new Admin();
+const users = new UserList();
+users.push(new User('Petter'));
+users.push(new User('Ivan'));
+users.push(new User('Ann'));
+console.log(users.getUsersToString());

@@ -1,29 +1,53 @@
 class User {
-    name: string = 'user';
+    name: string;
 
-    constructor() {
-        console.log(this.name)
+    constructor(name: string) {
+        this.name = name;
     }
 }
 
-class Admin extends User {
-    name: string = 'admin';
+// class Users extends Array<User> {        //Так себе вариант
+//     searchByName(name: string) {
+//         return this.filter(u => u.name === name);
+//     }
+// }
 
-    constructor() {
-        super();
-        console.log(this.name)
+// const users = new Users();
+
+class UserList {
+    users: User[] = [];
+
+    push(user: User) {
+        this.users.push(user);
+    }
+
+    getUsersToString() {
+        return this.users.map((user: User) => user.name).join(', ');
     }
 }
 
-new Admin();
+const users = new UserList();
+users.push(new User('Petter'));
+users.push(new User('Ivan'));
+users.push(new User('Ann'));
 
-new Error('');
 
-class HTTPError extends Error {
-    code: number;
+console.log(users.getUsersToString());
 
-    constructor(message: string, code?:number) {
-        super(message);
-        this.code = code ?? 500
+class Payment {
+    date: Date;
+}
+
+// class UserWithPayment extends Payment {  //Так не надо
+//     name: string;
+// }
+
+class UserWithPayment {
+    user: User;
+    payment: Payment;
+
+    constructor(user: User, payment: Payment) {
+        this.payment = payment;
+        this.user = user;
     }
 }
