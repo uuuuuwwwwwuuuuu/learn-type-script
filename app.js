@@ -1,28 +1,23 @@
 "use strict";
-class User {
-    constructor(name) {
-        this.name = name;
-    }
-}
-// class Users extends Array<User> {        //Так себе вариант
-//     searchByName(name: string) {
-//         return this.filter(u => u.name === name);
-//     }
-// }
-// const users = new Users();
-class UserList {
+var _Car_price;
+class Car {
     constructor() {
-        this.users = [];
+        this.damages = []; //что бы было недоступно нигде вне класса (только в TS)
+        _Car_price.set(this, void 0); //тоже самое что и в js
     }
-    push(user) {
-        this.users.push(user);
+    set model(model) {
+        this._model = model;
     }
-    getUsersToString() {
-        return this.users.map((user) => user.name).join(', ');
+    get model() {
+        return this._model;
+    }
+    addDamage(damage) {
+        this.damages.push(damage);
     }
 }
-const users = new UserList();
-users.push(new User('Petter'));
-users.push(new User('Ivan'));
-users.push(new User('Ann'));
-console.log(users.getUsersToString());
+_Car_price = new WeakMap();
+class EuroTrack extends Car {
+    setDamage() {
+        ///
+    }
+}
