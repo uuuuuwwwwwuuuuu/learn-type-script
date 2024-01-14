@@ -1,36 +1,29 @@
-type PaymentStatus = 'new' | 'paid';
-
-class Payment {
-    id: number;
-    status: PaymentStatus = 'new';
-
-    constructor(id: number) {
-        this.id = id;
-    }
-
-    pay() {
-        this.status = 'paid';
-    }
-}
-
-class ParsistedPayment extends Payment {
-    dataBaseId: number;
-    paidAt: Date;
+class User {
+    name: string = 'user';
 
     constructor() {
-        const id = Math.random();
-        super(id);
-    }
-
-    save() {
-        // Сохраняет базу
-    }
-
-    override pay(date?: Date) {          //override
-        if (date) {
-            this.paidAt = date;
-        }
+        console.log(this.name)
     }
 }
 
-new ParsistedPayment()
+class Admin extends User {
+    name: string = 'admin';
+
+    constructor() {
+        super();
+        console.log(this.name)
+    }
+}
+
+new Admin();
+
+new Error('');
+
+class HTTPError extends Error {
+    code: number;
+
+    constructor(message: string, code?:number) {
+        super(message);
+        this.code = code ?? 500
+    }
+}
