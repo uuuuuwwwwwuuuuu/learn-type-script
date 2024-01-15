@@ -1,16 +1,14 @@
 "use strict";
-class Controller {
-    handleWithLogs(req) {
-        console.log('start');
-        this.handle(req);
-        console.log('end');
+class Logger {
+    printDate() {
+        const currentDate = new Date();
+        this.log(currentDate.toString());
     }
 }
-class UserController extends Controller {
-    handle(req) {
-        console.log(req);
+class RealLogger extends Logger {
+    log(message) {
+        console.log(message);
     }
 }
-// new Controller() - error     абстрактные классы нельзя инстансиировать, только использовать в наследовании
-const user = new UserController();
-user.handleWithLogs('Request');
+const logger = new RealLogger();
+logger.printDate();

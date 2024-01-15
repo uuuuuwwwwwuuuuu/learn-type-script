@@ -1,20 +1,18 @@
-abstract class Controller {
-    abstract handle(req:any): void;
-
-    handleWithLogs(req: any) {
-        console.log('start');
-        this.handle(req);
-        console.log('end');
+abstract class Logger {
+    abstract log(message: string): void;  
+    
+    printDate(): void {
+        const currentDate = new Date();
+        this.log(currentDate.toString());
     }
 }
 
-class UserController extends Controller{
-    handle(req: any): void {
-        console.log(req)
+class RealLogger extends Logger {
+    log(message: string): void {
+        console.log(message);
     }
 }
 
-// new Controller() - error     абстрактные классы нельзя инстансиировать, только использовать в наследовании
+const logger = new RealLogger();
 
-const user = new UserController();
-user.handleWithLogs('Request');
+logger.printDate();
