@@ -1,27 +1,20 @@
-class UserBuilder {
-    name: string;
+abstract class Controller {
+    abstract handle(req:any): void;
 
-    setName(name: string): this {           //если я хочу вернуть этот же класс
-        this.name = name;
-        return this
-    }
-
-    isAdmin(): this is AdminBuilder {
-        return this instanceof AdminBuilder;
+    handleWithLogs(req: any) {
+        console.log('start');
+        this.handle(req);
+        console.log('end');
     }
 }
 
-class AdminBuilder extends UserBuilder {
-    roles: string[];
+class UserController extends Controller{
+    handle(req: any): void {
+        console.log(req)
+    }
 }
 
-const res = new UserBuilder().setName('Ivan');          //возвращает UserBuilder
-const res2 = new AdminBuilder().setName('Ivan');        //теперь возвращает AdminBuilder, так как this ссылается уже на AdminBuilder
+// new Controller() - error     абстрактные классы нельзя инстансиировать, только использовать в наследовании
 
-let user: UserBuilder | AdminBuilder = new UserBuilder();
-
-if (user.isAdmin()) {
-    console.log(user);
-} else {
-    console.log(user);
-}
+const user = new UserController();
+user.handleWithLogs('Request');
