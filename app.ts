@@ -1,26 +1,19 @@
-const data = [
-    {id: 1, name: 'Ivan'},
-    {id: 2, name: 'Ann'},
-    {id: 3, name: 'Denis'}  
-];
+class Resp<D, E> {
+    data?: D;
+    error?: E;
 
-const data2 = [
-    {id: 2, name: 'Ann'},
-    {id: 1, name: 'Ivan'},
-    {id: 3, name: 'Denis'}  
-];
-
-type method = 'ascending' | 'descending';
-
-function sortData<T extends {id: number}>(data: Array<T>, method?: method): Array<T> {
-    if (method) {
-        switch (method) {
-            case "ascending":
-                return data.sort((a, b) => a.id - b.id);
-            case "descending":
-                return data.sort((a, b) => b.id - a.id);
-        }
+    constructor(data?: D, error?: E) {
+        data ? this.data = data : null;
+        error ? this.error = error : null;
     }
-
-    return data.sort((a, b) => a.id - b.id);
 }
+
+class HTTPResponse extends Resp<string, number>{
+    code: number;
+
+    setCode(code: number) {
+        this.code = code;
+    }
+}
+
+const res2 = new HTTPResponse();
