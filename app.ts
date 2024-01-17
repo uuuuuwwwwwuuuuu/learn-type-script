@@ -1,14 +1,26 @@
-class Vehicle {
-    run: number;
-}
+const data = [
+    {id: 1, name: 'Ivan'},
+    {id: 2, name: 'Ann'},
+    {id: 3, name: 'Denis'}  
+];
 
-function kmToMiles<T extends Vehicle>(vehicle: T): T {
-    vehicle.run = vehicle.run / 0.62;
-    return vehicle
-}
+const data2 = [
+    {id: 2, name: 'Ann'},
+    {id: 1, name: 'Ivan'},
+    {id: 3, name: 'Denis'}  
+];
 
-function logId<T extends string | number, Y>(id: T, additionalData: Y): {id: T, data: Y} {
-    console.log(id);
-    console.log(additionalData);
-    return {id, data: additionalData};
+type method = 'ascending' | 'descending';
+
+function sortData<T extends {id: number}>(data: Array<T>, method?: method): Array<T> {
+    if (method) {
+        switch (method) {
+            case "ascending":
+                return data.sort((a, b) => a.id - b.id);
+            case "descending":
+                return data.sort((a, b) => b.id - a.id);
+        }
+    }
+
+    return data.sort((a, b) => a.id - b.id);
 }
