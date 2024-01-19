@@ -1,32 +1,27 @@
-interface IData {
-    group: number;
-    name: string
+let strOrNum: string | number = 5;
+
+if (Math.random() > 0.5) {
+    strOrNum = 5;
+} else {
+    strOrNum = 'str';
 }
 
-const data: IData[] = [
-	{ group: 1, name: 'a' },
-	{ group: 1, name: 'b' },
-	{ group: 2, name: 'c' },
-];
-
-interface IGroup<T> {
-    [key: string]: T[];
+if (typeof strOrNum == 'string') {
+    console.log(strOrNum);
+} else {
+    console.log(strOrNum);
 }
 
-type key = number | string | symbol;
+let strOrNumber: typeof strOrNum;
 
-function group<T extends Record<key, any>>(array: T[], key: keyof T): IGroup<T> {
-    return array.reduce<IGroup<T>>((akb: IGroup<T>, item) => {
-        const itemKey = item[key];
-        let currentEl = akb[itemKey];
-        if (Array.isArray(currentEl)) {
-            currentEl.push(item);
-        } else {
-            currentEl = [item];
-        }
-        akb[itemKey] = currentEl;
-        return akb;
-    }, {});
+const user = {
+    name: "Вася"
+};
+
+type keyOfUser = keyof typeof user;
+
+enum Direction {
+    up,
+    down
 }
-
-group(data, 'group');
+type d = keyof typeof Direction;
