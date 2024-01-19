@@ -1,17 +1,32 @@
-interface IUser {
-    name: string;
-    age: number;
+interface IData {
+    group: number;
+    name: string
 }
 
-type KeysOfUser = keyof IUser;
+const data: IData[] = [
+	{ group: 1, name: 'a' },
+	{ group: 1, name: 'b' },
+	{ group: 2, name: 'c' },
+];
 
-function getValue<T, K extends keyof T>(obj: T, key: K) {
-    return obj[key];
+interface IGroup<T> {
+    [key: string]: T[];
 }
 
-const user: IUser = {
-    name: 'Вася',
-    age: 30
+type key = number | string | symbol;
+
+function group<T extends Record<key, any>>(array: T[], key: keyof T): IGroup<T> {
+    return array.reduce<IGroup<T>>((akb: IGroup<T>, item) => {
+        const itemKey = item[key];
+        let currentEl = akb[itemKey];
+        if (Array.isArray(currentEl)) {
+            currentEl.push(item);
+        } else {
+            currentEl = [item];
+        }
+        akb[itemKey] = currentEl;
+        return akb;
+    }, {});
 }
 
-const userName = getValue(user, 'name');
+group(data, 'group');
