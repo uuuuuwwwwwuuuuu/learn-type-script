@@ -1,41 +1,25 @@
 interface IUserService {
     users: number;
-    getUsersInDataBase(): number
+    getUsersInDB(): number;
 }
 
-@setUsers(2)
-// @threeUserAdvanced
-// @createClassWithUsers(5)
+@createdAt
 class UserService implements IUserService {
-    users: number;
-
-    getUsersInDataBase(): number {
+    users: number = 1000;
+    
+    getUsersInDB(): number {
         return this.users;
     }
 }
 
-function nullUser(target: Function) {           //Жёстко заданно (дикоратор)
-    target.prototype.users = 0
-}
-
-function setUsers(users: number) {              //Позволяет изменять (фабрика дикораторов)
-    return (target: Function) => {
-        target.prototype.users = users;
-    }
-}
-
-function threeUserAdvanced<T extends { new(...args: any[]): {}}>(constructor: T) {      //Жёстко заданно (дикоратор)
+function createdAt<T extends {new (...args: any[]): {}}>(constructor: T) {
     return class extends constructor {
-        users = 3;
+        createdAt = new Date();
     }
 }
 
-function createClassWithUsers(users: number) {                                             //Позволяет изменять (фабрика дикораторов)
-    return <T extends { new(...args: any[]): {}}>(constructor: T) => {  //создаёт класс на основе дикорируемого класса и позволяет задавать свои параметры
-        return class extends constructor {
-            users = users;
-        }
-    }
+type createdAt = {
+    createdAt: Date;
 }
 
-console.log(new UserService().getUsersInDataBase());            //Выводит 3
+console.log(new UserService() as IUserService & createdAt);
