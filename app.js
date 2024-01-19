@@ -7,17 +7,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 class UserService {
     getUsersInDB() {
-        throw new Error('Error');
+        throw new Error('Ошибка');
     }
 }
 __decorate([
-    Log
-], UserService.prototype, "getUsersInDB", null);
-function Log(target, propKey, descriptor) {
-    const oldValue = descriptor.value;
-    descriptor.value = () => {
-        console.log('no error');
-        oldValue();
+    Max(100)
+], UserService.prototype, "users", void 0);
+function Max(max) {
+    return (target, propKey) => {
+        let value;
+        const setter = (newValue) => {
+            if (newValue > max) {
+                console.log(`Нельзя установить значение больше чем ${max}`);
+            }
+            else {
+                value = newValue;
+            }
+        };
+        const getter = () => {
+            return value;
+        };
+        Object.defineProperty(target, propKey, {
+            set: setter,
+            get: getter
+        });
     };
 }
-console.log(new UserService().getUsersInDB());
+const user = new UserService();
+user.users = 1;
+console.log(user.users);
+user.users = 101;
+console.log(user.users);
