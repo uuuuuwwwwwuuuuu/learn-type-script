@@ -1,27 +1,48 @@
-let strOrNum: string | number = 5;
+const a: number = Math.random() > 0.5 ? 1 : 0;
 
-if (Math.random() > 0.5) {
-    strOrNum = 5;
-} else {
-    strOrNum = 'str';
+interface HTTPResponse<T extends 'success' | 'failed'> {
+    code: number;
+    data: T extends 'success' ? string : Error;
 }
 
-if (typeof strOrNum == 'string') {
-    console.log(strOrNum);
-} else {
-    console.log(strOrNum);
+const suc: HTTPResponse<'success'> = {
+    code: 200,
+    data: 'done'
 }
 
-let strOrNumber: typeof strOrNum;
-
-const user = {
-    name: "Вася"
-};
-
-type keyOfUser = keyof typeof user;
-
-enum Direction {
-    up,
-    down
+const err: HTTPResponse<"failed"> = {
+    code: 404,
+    data: new Error()
 }
-type d = keyof typeof Direction;
+
+class User {
+    id: number;
+    name: string;
+}
+
+class UserPersistend extends User{
+    dbId: string;
+}
+
+// function getUser(id: number): User;
+// function getUser(dbId: string): UserPersistend;
+// function getUser(dbIdOrId: string | number): User | UserPersistend {            //Перегрузка
+//     if (typeof dbIdOrId === 'number') {
+//         return new User();
+//     } else {
+//         return new UserPersistend(); 
+//     }
+// }
+
+type UserOrUserPErsistend<T extends string | number> = T extends number ? User : UserPersistend;
+
+function getUser<T extends string | number>(id: T): UserOrUserPErsistend<T> {
+    if (typeof id === 'number') {
+        return new User() as UserOrUserPErsistend<T>;
+    } else {
+        return new UserPersistend(); 
+    }
+}
+
+const res = getUser(1);
+const res2 = getUser('stgoe');
