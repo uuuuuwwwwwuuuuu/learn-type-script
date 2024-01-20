@@ -1,43 +1,62 @@
-class Form {
-    constructor (public name: string) { }          //форма с данными
+interface Observer {
+    update(subject: Subject): void;
 }
 
-abstract class SaveForm<T> {
-    save(form: Form) {
-        const res = this.fill(form);
-        this.log(res);
-        this.send(res);
-    }
-
-    protected abstract fill(form: Form): T;         //метод по заполнению формы, которую выше мы сохраним в переменную res (метод будет описан ниже)
-
-    protected log(data: T): void {                  //метод по логированию данных перед отправкой
-        console.log(data);                          
-    }
-
-    protected abstract send(data: T): void;         //метод по отправке данныъ (так же будет описан ниже для каждого унаследованного класса)
+interface Subject {
+    attach(observer: Observer): void;       //подписка на уведы
+    detach(observer: Observer): void;       //отписка от увед
+    notify(): void;                         //сама уведа об изменении
 }
 
-class FirstAPI extends SaveForm<string> {
-    protected fill(form: Form): string {
-        return form.name;
+class Lead {
+    constructor (public name: string, public phone: string) {}
+}
+
+class NewLead implements Subject {
+    private observers: Observer[] = [];
+    public state: Lead;
+    
+    attach(observer: Observer): void {
+        if (this.observers.includes(observer)) {
+            return;
+        }
+        this.observers.push(observer);
     }
-    protected send(data: string): void {
-        console.log(`Отправляю ${data}`);
+
+    detach(observer: Observer): void {
+        const observerIndex = this.observers.indexOf(observer);
+        if (observerIndex - 1) {
+            return
+        }
+        this.observers.splice(observerIndex, 1);
+    }
+
+    notify(): void {
+        for (const observer of this.observers) {
+            observer.update(this);
+        }
     }
 }
 
-class SecondAPI extends SaveForm<{fio: string}> {
-    protected fill(form: Form): {fio: string} {
-        return {fio: form.name};
-    }
-    protected send(data: {fio: string}): void {
-        console.log(`Отправляю ${data}`);
+class NotificationService implements Observer {
+    update(subject: Subject): void {
+        console.log('NotificationService получуил уведу');
+        console.log(subject);
     }
 }
 
-const form1 = new FirstAPI();
-form1.save(new Form('Ivan'));
+class LeadService implements Observer {
+    update(subject: Subject): void {
+        console.log('LeadService получуил уведу');
+        console.log(subject);
+    }
+}
 
-const form2 = new SecondAPI();
-form2.save(new Form('Vasya'));
+const subject = new NewLead();
+subject.state = new Lead('Ivan', '+42358934932');
+const s1 = new NotificationService();
+const s2 = new LeadService();
+
+subject.attach(s1);
+subject.attach(s2);
+subject.notify();
