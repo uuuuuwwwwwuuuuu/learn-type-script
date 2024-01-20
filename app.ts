@@ -1,58 +1,55 @@
-interface IMiddleware {                         //суть паттерна заключается в оверрайде метода на каждом этапе и передаче запроса дальше
-    next(mid: IMiddleware): IMiddleware;        //параллельно отлавливая ошибки
-    handle(req: any): any;
+interface IMediator {
+    notify(sender: string, event: string): void;
 }
 
-abstract class AbstractMiddleware implements IMiddleware{
-    private nextMiddleware: IMiddleware;
+abstract class Mediated {
+    mediator: IMediator;
 
-    next(mid: IMiddleware): IMiddleware {
-        this.nextMiddleware = mid;
-        return mid;
+    setMediator(mediator: IMediator) {
+        this.mediator = mediator;
     }
+}
 
-    handle(req: any) {
-        if (this.nextMiddleware) {
-            return this.nextMiddleware.handle(req);
+
+class Notifications {
+    send() {
+        console.log('Отправляю уведомление');
+    }
+}
+
+class Log {
+    log(message: string) {
+        console.log(message);
+    }
+}
+
+class EventHandler extends Mediated {
+    myEvent() {
+        this.mediator.notify('EventHabdler', 'myEvent');
+    }
+}
+
+class NotificationMediator implements IMediator {
+    constructor(
+        public notifications: Notifications,
+        public logger: Log,
+        public handler: EventHandler
+    ) {}
+
+    notify(_: string, event: string): void {
+        switch (event) {
+            case "myEvent":
+                this.notifications.send();
+                this.logger.log('Отправленно');
+                break;
         }
-        return;
     }
 }
 
-class AuthMiddleware extends AbstractMiddleware {
-    override handle(req: any) {
-        console.log('AuthMiddleware');
-        if (req.userId === 1) {
-            return super.handle(req);
-        }
-        return { error: 'Вы не авторизованны' };
-    }
-}
+const handler = new EventHandler();
+const logger = new Log();
+const notifications = new Notifications();
 
-class ValidateMiddleware extends AbstractMiddleware {
-    override handle(req: any) {
-        console.log('ValidateMiddleWare');
-        if (req.body) {
-            return super.handle(req);
-        }
-        return { error: 'Нет body' };
-    }
-}
-
-class Controller extends AbstractMiddleware {
-    override handle(req: any) {
-        console.log('Controller');
-        return { success: req };
-    }
-}
-
-const controller = new Controller();
-const validate = new ValidateMiddleware();
-const auth = new AuthMiddleware();
-
-auth.next(validate).next(controller);
-
-console.log(auth.handle({
-    userId: 1,
-    body: 'Ivan'
-}));
+const mediator = new NotificationMediator(notifications, logger, handler);
+handler.setMediator(mediator);
+handler.myEvent()
