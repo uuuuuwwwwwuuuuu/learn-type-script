@@ -1,42 +1,58 @@
 "use strict";
-class Mediated {
-    setMediator(mediator) {
-        this.mediator = mediator;
+class DocumentItem {
+    constructor() {
+        this.setState(new DraftDocumentItemState);
+    }
+    getState() {
+        return this.state;
+    }
+    setState(state) {
+        this.state = state;
+        this.state.setContext(this);
+    }
+    publishDoc() {
+        this.state.publish();
+    }
+    deleteDoc() {
+        this.state.delete();
     }
 }
-class Notifications {
-    send() {
-        console.log('Отправляю уведомление');
+class DocumentItemState {
+    setContext(item) {
+        this.item = item;
     }
 }
-class Log {
-    log(message) {
-        console.log(message);
+class DraftDocumentItemState extends DocumentItemState {
+    constructor() {
+        super();
+        this.name = 'DraftDocument';
+    }
+    publish() {
+        console.log(`На сайт отправлен текст ${this.item.text}`);
+        this.item.setState(new PublishDocumentState());
+    }
+    delete() {
+        console.log('Документ удалён');
     }
 }
-class EventHandler extends Mediated {
-    myEvent() {
-        this.mediator.notify('EventHabdler', 'myEvent');
+class PublishDocumentState extends DocumentItemState {
+    constructor() {
+        super();
+        this.name = 'Published';
+    }
+    publish() {
+        console.log('Невозможно опубликовать опубликованный документ');
+    }
+    delete() {
+        console.log('Снято с публикации');
+        this.item.setState(new DraftDocumentItemState());
     }
 }
-class NotificationMediator {
-    constructor(notifications, logger, handler) {
-        this.notifications = notifications;
-        this.logger = logger;
-        this.handler = handler;
-    }
-    notify(_, event) {
-        switch (event) {
-            case "myEvent":
-                this.notifications.send();
-                this.logger.log('Отправленно');
-                break;
-        }
-    }
-}
-const handler = new EventHandler();
-const logger = new Log();
-const notifications = new Notifications();
-const mediator = new NotificationMediator(notifications, logger, handler);
-handler.setMediator(mediator);
-handler.myEvent();
+const item = new DocumentItem();
+item.text = 'My post';
+console.log(item.getState());
+item.publishDoc();
+console.log(item.getState());
+item.publishDoc();
+item.deleteDoc();
+console.log(item.getState());

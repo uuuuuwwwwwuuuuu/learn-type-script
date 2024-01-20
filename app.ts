@@ -1,55 +1,74 @@
-interface IMediator {
-    notify(sender: string, event: string): void;
-}
+class DocumentItem {
+    text: string;
+    private state: DocumentItemState;
 
-abstract class Mediated {
-    mediator: IMediator;
+    constructor() {
+        this.setState(new DraftDocumentItemState);
+    }
 
-    setMediator(mediator: IMediator) {
-        this.mediator = mediator;
+    getState() {
+        return this.state;
+    }
+
+    setState(state: DocumentItemState) {
+        this.state = state;
+        this.state.setContext(this)
+    }
+
+    publishDoc() {
+        this.state.publish();
+    }
+
+    deleteDoc() {
+        this.state.delete();
     }
 }
 
+abstract class DocumentItemState {
+    name: string;
+    item: DocumentItem;
 
-class Notifications {
-    send() {
-        console.log('Отправляю уведомление');
+    setContext(item: DocumentItem) {
+        this.item = item;
+    }
+
+    abstract publish(): void;
+    abstract delete(): void;
+}
+
+class DraftDocumentItemState extends DocumentItemState {
+    constructor() {
+        super();
+        this.name = 'DraftDocument'
+    }
+    publish(): void {
+        console.log(`На сайт отправлен текст ${this.item.text}`);
+        this.item.setState(new PublishDocumentState());
+    }
+    delete(): void {
+        console.log('Документ удалён');
     }
 }
 
-class Log {
-    log(message: string) {
-        console.log(message);
+class PublishDocumentState extends DocumentItemState {
+    constructor() {
+        super();
+        this.name = 'Published'
+    }
+    publish(): void {
+        console.log('Невозможно опубликовать опубликованный документ')
+    }
+    delete(): void {
+        console.log('Снято с публикации');
+        this.item.setState(new DraftDocumentItemState());
     }
 }
 
-class EventHandler extends Mediated {
-    myEvent() {
-        this.mediator.notify('EventHabdler', 'myEvent');
-    }
-}
-
-class NotificationMediator implements IMediator {
-    constructor(
-        public notifications: Notifications,
-        public logger: Log,
-        public handler: EventHandler
-    ) {}
-
-    notify(_: string, event: string): void {
-        switch (event) {
-            case "myEvent":
-                this.notifications.send();
-                this.logger.log('Отправленно');
-                break;
-        }
-    }
-}
-
-const handler = new EventHandler();
-const logger = new Log();
-const notifications = new Notifications();
-
-const mediator = new NotificationMediator(notifications, logger, handler);
-handler.setMediator(mediator);
-handler.myEvent()
+const item = new DocumentItem();
+item.text = 'My post';
+console.log(item.getState());
+item.publishDoc();
+console.log(item.getState());
+item.publishDoc();
+item.deleteDoc();
+console.log(item.getState());
