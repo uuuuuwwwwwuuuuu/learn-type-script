@@ -1,74 +1,45 @@
-class DocumentItem {
-    text: string;
-    private state: DocumentItemState;
+class User {                    //создаём юзера, у которого есть токен авторизации
+    githubToken: string;
+    jwtToken: string;
+}
 
-    constructor() {
-        this.setState(new DraftDocumentItemState);
+interface AuthStrategy {        //интерфейс, описывающий метод авторизации юзера
+    auth(user: User): boolean;
+}
+
+class Auth {                    //непосредственный класс авторизации, позволяющий выбрать через что авторизоваться и авторизовывает пользователя
+    constructor (private strategy: AuthStrategy) {}
+
+    setStrategy(strategy: AuthStrategy) {
+        this.strategy = strategy;
     }
 
-    getState() {
-        return this.state;
-    }
-
-    setState(state: DocumentItemState) {
-        this.state = state;
-        this.state.setContext(this)
-    }
-
-    publishDoc() {
-        this.state.publish();
-    }
-
-    deleteDoc() {
-        this.state.delete();
+    authUser(user: User): boolean {
+        return this.strategy.auth(user);        //описанный ниже метод для авторизации
     }
 }
 
-abstract class DocumentItemState {
-    name: string;
-    item: DocumentItem;
-
-    setContext(item: DocumentItem) {
-        this.item = item;
-    }
-
-    abstract publish(): void;
-    abstract delete(): void;
-}
-
-class DraftDocumentItemState extends DocumentItemState {
-    constructor() {
-        super();
-        this.name = 'DraftDocument'
-    }
-    publish(): void {
-        console.log(`На сайт отправлен текст ${this.item.text}`);
-        this.item.setState(new PublishDocumentState());
-    }
-    delete(): void {
-        console.log('Документ удалён');
+class JWTStrategy implements AuthStrategy {
+    auth(user: User): boolean {             //здесь должна быть логика проверки в API наличия токена пользователя для регистрации через JWT
+        if (user.jwtToken) {
+            return true;
+        }
+        return false;
     }
 }
 
-class PublishDocumentState extends DocumentItemState {
-    constructor() {
-        super();
-        this.name = 'Published'
-    }
-    publish(): void {
-        console.log('Невозможно опубликовать опубликованный документ')
-    }
-    delete(): void {
-        console.log('Снято с публикации');
-        this.item.setState(new DraftDocumentItemState());
+class GitHubStrategy implements AuthStrategy {      //Тоже самое только через GitHub
+    auth(user: User): boolean {
+        if (user.githubToken) {
+            return true;
+        }
+        return false;
     }
 }
 
-const item = new DocumentItem();
-item.text = 'My post';
-console.log(item.getState());
-item.publishDoc();
-console.log(item.getState());
-item.publishDoc();
-item.deleteDoc();
-console.log(item.getState());
+const user = new User();
+user.jwtToken = 'token';
+const auth = new Auth(new JWTStrategy());
+console.log(auth.authUser(user));       //true так как есть JWT токен
+auth.setStrategy(new GitHubStrategy());
+console.log(auth.authUser(user));       //false так как нет GitHub токена
