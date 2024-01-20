@@ -1,26 +1,45 @@
 "use strict";
-class PaymentAPI {
-    constructor() {
-        this.data = [{ id: 1, sum: 10000 }];
+class AbstractMiddleware {
+    next(mid) {
+        this.nextMiddleware = mid;
+        return mid;
     }
-    getPaymentDetails(id) {
-        return this.data.find(d => d.id === id);
-    }
-}
-class PaymentAccessProxy {
-    constructor(api, userId) {
-        this.api = api;
-        this.userId = userId;
-    }
-    getPaymentDetails(id) {
-        if (this.userId === 1) {
-            return this.api.getPaymentDetails(id);
+    handle(req) {
+        if (this.nextMiddleware) {
+            return this.nextMiddleware.handle(req);
         }
-        console.log('Попытка получить данные платежа!');
-        return undefined;
+        return;
     }
 }
-const proxy = new PaymentAccessProxy(new PaymentAPI(), 1);
-console.log(proxy.getPaymentDetails(1));
-const proxy2 = new PaymentAccessProxy(new PaymentAPI(), 2);
-console.log(proxy2.getPaymentDetails(1));
+class AuthMiddleware extends AbstractMiddleware {
+    handle(req) {
+        console.log('AuthMiddleware');
+        if (req.userId === 1) {
+            return super.handle(req);
+        }
+        return { error: 'Вы не авторизованны' };
+    }
+}
+class ValidateMiddleware extends AbstractMiddleware {
+    handle(req) {
+        console.log('ValidateMiddleWare');
+        if (req.body) {
+            return super.handle(req);
+        }
+        return { error: 'Нет body' };
+    }
+}
+class Controller extends AbstractMiddleware {
+    handle(req) {
+        console.log('Controller');
+        return { success: req };
+    }
+}
+const controller = new Controller();
+const validate = new ValidateMiddleware();
+const auth = new AuthMiddleware();
+auth.next(validate).next(controller);
+console.log(auth.handle({
+    userId: 1,
+    body: 'Ivan'
+}));
