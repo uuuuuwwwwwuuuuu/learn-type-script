@@ -1,45 +1,43 @@
-class User {                    //создаём юзера, у которого есть токен авторизации
-    githubToken: string;
-    jwtToken: string;
+class Form {
+    constructor (public name: string) { }          //форма с данными
 }
 
-interface AuthStrategy {        //интерфейс, описывающий метод авторизации юзера
-    auth(user: User): boolean;
-}
-
-class Auth {                    //непосредственный класс авторизации, позволяющий выбрать через что авторизоваться и авторизовывает пользователя
-    constructor (private strategy: AuthStrategy) {}
-
-    setStrategy(strategy: AuthStrategy) {
-        this.strategy = strategy;
+abstract class SaveForm<T> {
+    save(form: Form) {
+        const res = this.fill(form);
+        this.log(res);
+        this.send(res);
     }
 
-    authUser(user: User): boolean {
-        return this.strategy.auth(user);        //описанный ниже метод для авторизации
+    protected abstract fill(form: Form): T;         //метод по заполнению формы, которую выше мы сохраним в переменную res (метод будет описан ниже)
+
+    protected log(data: T): void {                  //метод по логированию данных перед отправкой
+        console.log(data);                          
     }
+
+    protected abstract send(data: T): void;         //метод по отправке данныъ (так же будет описан ниже для каждого унаследованного класса)
 }
 
-class JWTStrategy implements AuthStrategy {
-    auth(user: User): boolean {             //здесь должна быть логика проверки в API наличия токена пользователя для регистрации через JWT
-        if (user.jwtToken) {
-            return true;
-        }
-        return false;
+class FirstAPI extends SaveForm<string> {
+    protected fill(form: Form): string {
+        return form.name;
     }
-}
-
-class GitHubStrategy implements AuthStrategy {      //Тоже самое только через GitHub
-    auth(user: User): boolean {
-        if (user.githubToken) {
-            return true;
-        }
-        return false;
+    protected send(data: string): void {
+        console.log(`Отправляю ${data}`);
     }
 }
 
-const user = new User();
-user.jwtToken = 'token';
-const auth = new Auth(new JWTStrategy());
-console.log(auth.authUser(user));       //true так как есть JWT токен
-auth.setStrategy(new GitHubStrategy());
-console.log(auth.authUser(user));       //false так как нет GitHub токена
+class SecondAPI extends SaveForm<{fio: string}> {
+    protected fill(form: Form): {fio: string} {
+        return {fio: form.name};
+    }
+    protected send(data: {fio: string}): void {
+        console.log(`Отправляю ${data}`);
+    }
+}
+
+const form1 = new FirstAPI();
+form1.save(new Form('Ivan'));
+
+const form2 = new SecondAPI();
+form2.save(new Form('Vasya'));

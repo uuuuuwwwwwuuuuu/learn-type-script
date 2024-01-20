@@ -1,36 +1,36 @@
 "use strict";
-class User {
+class Form {
+    constructor(name) {
+        this.name = name;
+    } //форма с данными
 }
-class Auth {
-    constructor(strategy) {
-        this.strategy = strategy;
+class SaveForm {
+    save(form) {
+        const res = this.fill(form);
+        this.log(res);
+        this.send(res);
     }
-    setStrategy(strategy) {
-        this.strategy = strategy;
-    }
-    authUser(user) {
-        return this.strategy.auth(user); //описанный ниже метод для авторизации
-    }
-}
-class JWTStrategy {
-    auth(user) {
-        if (user.jwtToken) {
-            return true;
-        }
-        return false;
+    log(data) {
+        console.log(data);
     }
 }
-class GitHubStrategy {
-    auth(user) {
-        if (user.githubToken) {
-            return true;
-        }
-        return false;
+class FirstAPI extends SaveForm {
+    fill(form) {
+        return form.name;
+    }
+    send(data) {
+        console.log(`Отправляю ${data}`);
     }
 }
-const user = new User();
-user.jwtToken = 'token';
-const auth = new Auth(new JWTStrategy());
-console.log(auth.authUser(user));
-auth.setStrategy(new GitHubStrategy());
-console.log(auth.authUser(user));
+class SecondAPI extends SaveForm {
+    fill(form) {
+        return { fio: form.name };
+    }
+    send(data) {
+        console.log(`Отправляю ${data}`);
+    }
+}
+const form1 = new FirstAPI();
+form1.save(new Form('Ivan'));
+const form2 = new SecondAPI();
+form2.save(new Form('Vasya'));
