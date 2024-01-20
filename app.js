@@ -1,31 +1,20 @@
 "use strict";
-class MyMap {
-    constructor() {
-        this.map = new Map();
+class UserHistory {
+    constructor(email, name) {
+        this.email = email;
+        this.name = name;
+        this.createdAt = new Date();
     }
-    clean() {
-        this.map = new Map();
-    }
-    static get() {
-        if (!MyMap.instance) {
-            MyMap.instance = new MyMap();
-        }
-        return MyMap.instance;
+    clone() {
+        let target = new UserHistory(this.email, this.name);
+        target.createdAt = this.createdAt;
+        return target;
     }
 }
-class Service1 {
-    addMap(key, value) {
-        const myMap = MyMap.get();
-        myMap.map.set(key, value);
-    }
-}
-class Service2 {
-    getKeys(key) {
-        const myMap = MyMap.get();
-        return myMap.map.get(key);
-    }
-}
-const service1 = new Service1();
-const service2 = new Service2();
-service1.addMap(1, 'something');
-console.log(service2.getKeys(1));
+let user = new UserHistory('a@3gmail.com', 'Ivan');
+console.log(user);
+setTimeout(() => {
+    let user2 = user.clone();
+    user2.email = 'ofjcewpoew';
+    console.log(user2);
+}, 1000);
