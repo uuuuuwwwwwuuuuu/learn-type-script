@@ -1,26 +1,62 @@
-interface IPrototype<T> {
-    createdAt: Date;
-    clone(): T;
+enum ImageFormat {
+    PNG = 'png',
+    JPG = 'jpg'
 }
 
-class UserHistory implements IPrototype<UserHistory> {
-    createdAt: Date;
+interface IResolution {
+    width: number;
+    height: number;
+}
 
-    constructor(public email: string, public name: string) {
-        this.createdAt = new Date();
+interface IImageConversion extends IResolution {
+    format: ImageFormat;
+}
+
+class ImageBuilder {
+    private formats: ImageFormat[] = [];
+    private resolutions: IResolution[] = [];
+
+    addPng() {
+        if (this.formats.includes(ImageFormat.PNG)) {
+            return this
+        }
+        this.formats.push(ImageFormat.PNG);
+        return this
     }
 
-    clone(): UserHistory {
-        let target = new UserHistory(this.email, this.name);
-        target.createdAt = this.createdAt;
-        return target;
+    addJpg() {
+        if (this.formats.includes(ImageFormat.JPG)) {
+            return this
+        }
+        this.formats.push(ImageFormat.JPG);
+        return this
+    }
+
+    addResolution(width: number, height: number) {
+        this.resolutions.push({width, height});
+        return this
+    }
+
+    build(): IImageConversion[] {
+        const res: IImageConversion[] = [];
+
+        for(const r of this.resolutions) {
+            for(const f of this.formats) {
+                res.push({
+                    format: f,
+                    width: r.width,
+                    height: r.height
+                });
+            }
+        }
+
+        return res;
     }
 }
 
-let user = new UserHistory('a@3gmail.com', 'Ivan');
-console.log(user);
-setTimeout(() => {
-    let user2 = user.clone();
-    user2.email = 'ofjcewpoew';
-    console.log(user2);
-}, 1000);
+console.log(new ImageBuilder()
+    .addPng()
+    .addJpg()
+    .addResolution(100, 50)
+    .addResolution(200, 100)
+    .build());
